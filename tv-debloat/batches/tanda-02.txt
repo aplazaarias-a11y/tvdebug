@@ -1,0 +1,2 @@
+com.apple.atve.androidtv.appletv
+com.google.android.play.games

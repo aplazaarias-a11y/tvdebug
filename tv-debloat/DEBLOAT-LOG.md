@@ -91,9 +91,33 @@ grupo 3.
 Ninguno todavía. `disabled.txt` se va rellenando solo, con una línea por
 paquete y la tanda a la que pertenece.
 
-| Paquete | Qué era | Tanda | Deshacer |
-|---|---|---|---|
-| _(vacío)_ | | | |
+### Tanda 1 — aplicada, las 7 pruebas del mando OK
+
+| Paquete | Qué era |
+|---|---|
+| `com.google.android.backdrop` | Salvapantallas ambiental (fotos y sugerencias al estar parada) |
+| `com.android.dreams.basic` | Salvapantallas básico |
+| `com.google.android.tungsten.setupwraith` | Asistente de configuración inicial |
+| `com.google.android.onetimeinitializer` | Tareas de primer arranque |
+| `com.google.android.partnersetup` | Configuración/telemetría del fabricante con Google |
+| `com.google.android.feedback` | Envío de informes de uso a Google |
+| `com.google.android.syncadapters.calendar` | Sincronización de calendario |
+| `com.android.printspooler` | Cola de impresión |
+| `com.android.wallpaperbackup` | Copia del fondo de pantalla |
+
+### Tanda 2 — decidida por el usuario
+
+| Paquete | Qué era |
+|---|---|
+| `com.apple.atve.androidtv.appletv` | App de Apple TV |
+| `com.google.android.play.games` | Juegos de Google |
+
+### Lo que el usuario decidió CONSERVAR
+
+Netflix, Prime Video, Atresplayer, RTVE, IPTV Smarters, Downloader, FitOn,
+Chromecast (`mediashell`), navegador Vewd, Play-Fi y NordVPN. `com.easy.oad`
+queda intacto: nadie sabe qué es, y «OAD» apunta a actualizaciones de
+firmware.
 
 ---
 
