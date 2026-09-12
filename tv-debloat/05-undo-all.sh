@@ -24,9 +24,12 @@ if [ -f "$DIR/previous-home.txt" ]; then
   H="$(tr -d '\r\n' < "$DIR/previous-home.txt")"
   [ -n "$H" ] && ash cmd package set-home-activity "$H" | sed 's/^/  /'
 else
-  ash cmd package set-home-activity \
-    "com.google.android.apps.tv.launcherx/com.google.android.apps.tv.launcherx.home.HomeActivity" \
-    2>&1 | sed 's/^/  /'
+  # Sin previous-home.txt no se adivina el componente: se reactivan los dos
+  # lanzadores posibles y que el sistema pregunte al pulsar INICIO.
+  for cand in com.google.android.apps.tv.launcherx com.google.android.tvlauncher; do
+    ash pm enable "$cand" 2>/dev/null | sed 's/^/  /'
+  done
+  echo "  (pulsa INICIO en el mando y elige la pantalla de inicio que quieras)"
 fi
 
 echo "=== Reiniciando ==="

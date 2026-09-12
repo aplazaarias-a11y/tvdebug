@@ -43,7 +43,12 @@
 ^com\.google\.android\.gsf$
 ^com\.android\.vending$
 ^com\.google\.android\.apps\.tv\.launcherx$
+^com\.google\.android\.tvlauncher$
+^com\.google\.android\.tvrecommendations$
 # ^^^ PROTEGIDO HASTA QUE FLauncher SEA EL LANZADOR POR DEFECTO.
+#     OJO: esta tele usa el lanzador CLASICO (com.google.android.tvlauncher),
+#     no el launcherx de Google TV. Se detecto revisando la lista real: el
+#     lanzador estaba cayendo en "sin clasificar", sin proteger.
 #     Lo desactiva 06-switch-launcher.sh, que comprueba antes que FLauncher
 #     este instalado Y puesto como home. No lo metas en una tanda a mano.
 
@@ -103,3 +108,27 @@ atmos
 widevine
 ^com\.google\.android\.gms\.drm
 drmservice
+
+# --- RRO / OVERLAYS DE RECURSOS --------------------------------------------
+# Los "runtime resource overlays" llevan la personalizacion del fabricante
+# (config de red, wifi, ajustes). No son apps: desactivarlos cambia la
+# configuracion del sistema de formas impredecibles.
+^android\.auto_generated_rro
+^com\.google\.android\.overlay\.
+^com\.android\.tv\.overlay\.
+resoverlay
+\.tpvcustom$
+^com\.android\.connectivity\.resources
+
+# --- MODULOS MAINLINE (los actualiza Google, el sistema los necesita) ------
+^com\.google\.android\.ext\.services$
+^com\.google\.android\.ext\.shared$
+^com\.google\.android\.modulemetadata$
+
+# --- GESTION DE DISPOSITIVOS DE ENTRADA ------------------------------------
+# com.android.inputdevices maneja los teclados fisicos y sus distribuciones.
+^com\.android\.inputdevices$
+^com\.android\.companiondevicemanager$
+
+# --- VPN (este usuario tiene NordVPN instalado) ----------------------------
+^com\.android\.vpndialogs$

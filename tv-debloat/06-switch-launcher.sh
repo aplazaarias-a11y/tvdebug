@@ -8,8 +8,20 @@ set -uo pipefail
 need_device
 
 FL="me.efesser.flauncher"
-GOOGLE="com.google.android.apps.tv.launcherx"
 
+# Cual es el lanzador de Google en ESTA tele. Hay dos posibles y no se puede
+# dar por supuesto: los Google TV traen launcherx, los Android TV clasicos
+# (como este Philips) traen tvlauncher. Se detecta, no se adivina.
+GOOGLE=""
+for cand in com.google.android.apps.tv.launcherx com.google.android.tvlauncher; do
+  if ash pm list packages | grep -q "^package:${cand}$"; then GOOGLE="$cand"; break; fi
+done
+
+if [ -z "$GOOGLE" ]; then
+  die "No encuentro el lanzador de Google. Pasame 'adb shell pm list packages | grep -i launcher'"
+fi
+echo "Lanzador de Google en esta tele: $GOOGLE"
+echo
 echo "=== 1. ¿Esta FLauncher instalado? ==="
 if ! ash pm list packages | grep -q "^package:${FL}$"; then
   c_red "FLauncher NO esta instalado."

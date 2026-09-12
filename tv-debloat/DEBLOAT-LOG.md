@@ -59,6 +59,33 @@ clasificación en tres grupos también habría metido todo en «intocables».
 
 ---
 
+## Hallazgos al revisar la lista real de la tele
+
+La tele resultó ser un **Android TV clásico**, no Google TV. Tres cosas que
+solo se vieron con la lista delante:
+
+1. **El lanzador es `com.google.android.tvlauncher`**, no
+   `com.google.android.apps.tv.launcherx`. Solo el segundo estaba protegido,
+   así que la pantalla de inicio estaba cayendo en «sin clasificar», sin
+   cubrir. Ambos protegidos ahora, y `06-switch-launcher.sh` detecta cuál
+   existe en vez de darlo por supuesto.
+2. **La clasificación automática metía Netflix y Prime Video en «basura
+   segura».** El patrón barría las apps de streaming, pero el criterio del
+   brief era «streaming que *no uso*», y eso solo lo sabe el usuario. Movidas
+   al grupo 2 junto con `com.google.android.apps.mediashell` (el receptor de
+   Chromecast, que no es basura: es la función «enviar a la tele»).
+3. **Los RRO (`android.auto_generated_rro_*`, `com.android.tv.overlay.*`,
+   `com.google.android.overlay.*`, `*.tpvcustom`) estaban sin proteger.** No
+   son apps: llevan la personalización del fabricante (red, wifi, ajustes).
+   Desactivarlos cambia la configuración del sistema de forma impredecible.
+   Protegidos, junto con los módulos mainline (`ext.services`, `ext.shared`,
+   `modulemetadata`), `com.android.inputdevices` (teclados físicos) y
+   `com.android.vpndialogs` (este usuario tiene NordVPN).
+
+La protección por namespaces sí funcionó como se esperaba: ni un `org.droidtv.*`
+ni un `com.mediatek.*` apareció en «sin clasificar», todos quedaron en el
+grupo 3.
+
 ## Paquetes desactivados
 
 Ninguno todavía. `disabled.txt` se va rellenando solo, con una línea por
