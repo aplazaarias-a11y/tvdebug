@@ -10,6 +10,12 @@ Cosas que conviene saber antes de empezar:
   pulsas Intro.
 - **Cuando te pida la contraseña del Mac, NO se ve nada al teclear.** Ni
   puntitos ni asteriscos. Es normal, no está roto. Teclea y pulsa Intro.
+- **EL SILENCIO ES BUENA SEÑAL.** La mayoría de los comandos que funcionan
+  bien no escriben nada en pantalla: solo te vuelve a salir la línea con el
+  `%` esperando el siguiente. En la Terminal solo se habla para dar errores.
+  Si pegas algo, pulsas Intro y "no pasa nada", lo normal es que haya ido
+  bien. Cada vez que haga falta comprobarlo, esta guía te da un comando que
+  sí imprime algo.
 - Si algo sale mal, no pasa nada: en esta guía no se toca la tele hasta la
   PARTE 3.
 
@@ -44,9 +50,26 @@ Qué va a pasar:
 - Te pide tu contraseña del Mac. **No verás nada al teclearla.** Teclea y
   pulsa Intro.
 - Tarda entre 5 y 15 minutos. Verás mucho texto pasando. Es normal.
-- Al final, si te muestra dos líneas que empiezan por `echo` y te dice
+- Al final, si te muestra dos o tres líneas que empiezan por `echo` y te dice
   `Run these commands in your terminal`, **cópialas y ejecútalas**. Son para
   que el Mac encuentre Homebrew.
+
+  **Esas líneas no imprimen nada.** Las pegas, pulsas Intro, y parece que no
+  ha pasado nada. Correcto: han funcionado. Escriben una configuración en
+  silencio. Para comprobarlo, ejecuta:
+
+  ```
+  brew --version
+  ```
+
+  Debe responder algo tipo `Homebrew 4.x.x`.
+
+  Si responde `command not found`, pega esta línea entera, que lo arregla y
+  acaba imprimiendo la versión:
+
+  ```
+  BREW=$(ls /opt/homebrew/bin/brew /usr/local/bin/brew 2>/dev/null | head -1); if [ -n "$BREW" ]; then echo "eval \"\$($BREW shellenv)\"" >> ~/.zprofile; eval "$($BREW shellenv)"; brew --version; else echo "No encuentro Homebrew. Hay que repetir el Paso 2."; fi
+  ```
 
 ### Paso 3. Instalar adb
 
