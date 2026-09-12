@@ -1,0 +1,105 @@
+# ============================================================================
+# LISTA DE INTOCABLES  (patrones regex extendida, una por linea)
+# ============================================================================
+# 03-disable-batch.sh RECHAZA cualquier paquete que encaje aqui. Es la red de
+# seguridad: no depende de que nadie se acuerde de nada.
+#
+# Las lineas que empiezan por # son comentarios.
+# ----------------------------------------------------------------------------
+
+# --- EL FRAMEWORK Y EL PROPIO ADB -------------------------------------------
+^android$
+^com\.android\.shell$
+# ^^^ com.android.shell ES ADB. Si lo desactivas pierdes el acceso y ya no
+#     puedes deshacer nada salvo con un reset de fabrica.
+^com\.android\.systemui$
+^com\.android\.settings$
+^com\.android\.providers\.
+^com\.android\.packageinstaller$
+^com\.google\.android\.packageinstaller$
+^com\.android\.permissioncontroller$
+^com\.google\.android\.permissioncontroller$
+^com\.android\.keychain$
+^com\.android\.certinstaller$
+^com\.android\.externalstorage$
+^com\.android\.mtp$
+^com\.android\.se$
+^com\.android\.server\.
+^com\.android\.networkstack
+^com\.android\.wifi
+^com\.android\.bluetooth
+^com\.android\.dynsystem$
+^com\.android\.localtransport$
+
+# --- WEBVIEW (si lo quitas, media app se queda en blanco) -------------------
+^com\.android\.webview$
+^com\.google\.android\.webview$
+^com\.android\.htmlviewer$
+
+# --- LO QUE PIDIO EL USUARIO EXPLICITAMENTE --------------------------------
+^com\.android\.location\.fused$
+# ^^^ desactivarlo = bucle de arranque
+^com\.google\.android\.gms
+^com\.google\.android\.gsf$
+^com\.android\.vending$
+^com\.google\.android\.apps\.tv\.launcherx$
+# ^^^ PROTEGIDO HASTA QUE FLauncher SEA EL LANZADOR POR DEFECTO.
+#     Lo desactiva 06-switch-launcher.sh, que comprueba antes que FLauncher
+#     este instalado Y puesto como home. No lo metas en una tanda a mano.
+
+# --- TECLADO EN PANTALLA ----------------------------------------------------
+inputmethod
+^com\.google\.android\.tvkeyboard
+^com\.google\.android\.apps\.inputmethod
+
+# --- EL MANDO A DISTANCIA ---------------------------------------------------
+^com\.google\.android\.tv\.remote
+^com\.google\.android\.tv\.pairing
+remotepairing
+\.rcu
+bt_rcu
+autopair
+
+# --- EQUIVALENTES TCL (por si el script se reutiliza en un TCL) -------------
+^com\.tcl\.suspension$
+^com\.tcl\.tv$
+^com\.tcl\.tvinput
+^com\.tcl\.tcl_bt_rcu_service$
+^com\.tcl\.autopair$
+
+# --- PHILIPS / TP VISION : TODO EL NAMESPACE, POR DEFECTO ------------------
+# Aqui viven las entradas HDMI, el menu Fuentes, el Ambilight, el tuner y el
+# manejo del mando. Los nombres varian entre chasis, asi que NO adivinamos:
+# se protege el bloque entero y sacamos paquetes de uno en uno solo tras
+# revisarlos sobre la lista real de TU tele.
+^org\.droidtv\.
+^com\.philips\.
+^com\.tpv
+^com\.tpvision
+^nl\.tpvision
+
+# --- SOC / PLATAFORMA (MediaTek en los Philips) ----------------------------
+^com\.mediatek\.
+^com\.mtk\.
+^com\.amlogic\.
+^com\.realtek\.
+
+# --- ENTRADAS / HDMI / CEC GENERICO ----------------------------------------
+tvinput
+^com\.android\.tv\.settings$
+hdmi
+\.cec
+tuner
+^com\.android\.tv\.frameworkpackagestubs$
+
+# --- AUDIO -----------------------------------------------------------------
+audioservice
+^com\.android\.soundrecorder$
+dolby
+^com\.dts\.
+atmos
+
+# --- DRM  (tocar esto es arriesgar que Netflix baje a SD) ------------------
+widevine
+^com\.google\.android\.gms\.drm
+drmservice
