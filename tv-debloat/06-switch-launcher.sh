@@ -37,9 +37,13 @@ c_grn "FLauncher instalado."
 
 echo
 echo "=== 2. Cual es el lanzador actual ==="
-BEFORE="$(ash cmd package resolve-activity --brief -c android.intent.category.HOME | tail -1)"
+BEFORE="$(ash cmd package resolve-activity --brief \
+          -a android.intent.action.MAIN -c android.intent.category.HOME | tail -1)"
 echo "  $BEFORE"
-echo "$BEFORE" > "$DIR/previous-home.txt"
+case "$BEFORE" in
+  */*) echo "$BEFORE" > "$DIR/previous-home.txt" ;;
+  *)   c_yel "  no he podido leer el lanzador actual; no guardo previous-home.txt" ;;
+esac
 echo "  (guardado en previous-home.txt para poder deshacerlo)"
 
 echo
@@ -52,7 +56,8 @@ echo
 echo "=== 4. Poniendolo como pantalla de inicio ==="
 ash cmd package set-home-activity "${FL}/${FL}.MainActivity" 2>&1 | sed 's/^/  /'
 sleep 2
-NOW="$(ash cmd package resolve-activity --brief -c android.intent.category.HOME | tail -1)"
+NOW="$(ash cmd package resolve-activity --brief \
+        -a android.intent.action.MAIN -c android.intent.category.HOME | tail -1)"
 echo "  home actual: $NOW"
 
 if ! grep -q "$FL" <<<"$NOW"; then

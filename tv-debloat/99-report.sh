@@ -6,7 +6,9 @@ A="$DIR/measurements/antes"; B="$DIR/measurements/despues"
 [ -d "$A" ] || die "falta measurements/antes"
 [ -d "$B" ] || die "falta measurements/despues (ejecuta ./01-measure.sh despues)"
 
-kb() { grep -E "^\s*$1:" "$2/meminfo.txt" 2>/dev/null | head -1 \
+# OJO: aqui habia '\s', que es una extension de GNU grep y NO funciona en
+# macOS (BSD grep). Hay que usar [[:space:]] o las filas salen todas n/d.
+kb() { grep -E "^[[:space:]]*$1:" "$2/meminfo.txt" 2>/dev/null | head -1 \
        | grep -oE '[0-9,]+K' | head -1 | tr -d 'K,'; }
 mb() { [ -n "${1:-}" ] && echo "$(( $1 / 1024 )) MB" || echo "n/d"; }
 
@@ -24,6 +26,6 @@ done
 pa=$(wc -l < "$A/packages-enabled.txt"); pb=$(wc -l < "$B/packages-enabled.txt")
 da=$(wc -l < "$A/packages-disabled.txt"); db=$(wc -l < "$B/packages-disabled.txt")
 printf "| %-18s | %-10s | %-10s | %-12s |\n" "Paquetes activos"  "$pa" "$pb" "$((pb-pa))"
-printf "| %-18s | %-10s | %-12s | %-12s |\n" "Paquetes desactiv." "$da" "$db" "+$((db-da))"
+printf "| %-18s | %-10s | %-10s | %-12s |\n" "Paquetes desactiv." "$da" "$db" "+$((db-da))"
 echo
 echo "Desactivados en esta sesion: $(grep -cv '^#' "$DIR/disabled.txt" 2>/dev/null || echo 0)"

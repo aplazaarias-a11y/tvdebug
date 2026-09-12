@@ -22,7 +22,8 @@ echo "=== Midiendo ($LABEL) -> measurements/$LABEL/ ==="
 
 # --- RAM (lo que pide la regla 3) ---
 ash dumpsys meminfo > "$OUT/meminfo.txt"
-grep -E '^\s*(Total RAM|Free RAM|Used RAM|Lost RAM|ZRAM)' "$OUT/meminfo.txt" > "$OUT/ram-summary.txt" || true
+grep -E '^[[:space:]]*(Total RAM|Free RAM|Used RAM|Lost RAM|ZRAM)' \
+  "$OUT/meminfo.txt" > "$OUT/ram-summary.txt" || true
 
 # --- Paquetes ---
 ash pm list packages -s | sed 's/^package://' | sort > "$OUT/packages-system.txt"
@@ -32,8 +33,11 @@ ash pm list packages -3 | sed 's/^package://' | sort > "$OUT/packages-thirdparty
 ash pm list packages    | sed 's/^package://' | sort > "$OUT/packages-all.txt"
 
 # --- Lanzador actual (para poder deshacer el cambio de home) ---
-ash cmd package resolve-activity --brief -c android.intent.category.HOME \
-  | tail -1 > "$OUT/home-activity.txt" || true
+# Sin '-a android.intent.action.MAIN' esto responde "No activity found":
+# la categoria HOME sola no resuelve nada.
+H="$(ash cmd package resolve-activity --brief \
+      -a android.intent.action.MAIN -c android.intent.category.HOME | tail -1)"
+case "$H" in */*) echo "$H" ;; *) echo "" ;; esac > "$OUT/home-activity.txt"
 
 # --- Procesos en marcha, para ver qué se arranca solo ---
 ash ps -A -o NAME 2>/dev/null | sort -u > "$OUT/processes.txt" || true
