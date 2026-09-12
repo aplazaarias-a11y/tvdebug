@@ -4,6 +4,9 @@ Scripts para quitar anuncios y filas de recomendaciones, desactivar apps de
 fábrica y acelerar la tele. **Nada se desinstala:** todo es
 `pm disable-user --user 0`, reversible.
 
+> **¿Primera vez y con un Mac?** Lee [`GUIA-MAC.md`](GUIA-MAC.md): los mismos
+> pasos pero explicados desde cero, incluido cómo abrir la Terminal.
+
 ## Orden de ejecución
 
 ```bash
@@ -64,4 +67,5 @@ en HD). `NEVER-DISABLE.txt` protege además los paquetes DRM.
 | `DEBLOAT-LOG.md` | Qué se hizo, por qué, y cómo deshacerlo. |
 | `previous-home.txt` | Lanzador anterior, para restaurarlo. |
 | `measurements/` | Medidas `antes/` y `despues/`. |
+| `GUIA-MAC.md` | Guía paso a paso para Mac sin experiencia en terminal. |
 | `batches/` | Grupos y tandas. |
