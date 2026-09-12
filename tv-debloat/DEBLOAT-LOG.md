@@ -5,12 +5,37 @@ desinstala.** Todo es `pm disable-user --user 0`, reversible con `pm enable`.
 
 ---
 
-## Estado actual
+## Estado final
 
-**Nada ejecutado todavía contra la tele.** La sesión de Claude que preparó
-este toolkit corría en un contenedor en la nube, sin ruta de red hacia
-192.168.178.86 (puerto 5555 inalcanzable, sin interfaz en la LAN doméstica).
-Los comandos los lanzas tú; los scripts llevan las salvaguardas dentro.
+**Terminado.** 12 paquetes desactivados, animaciones al 50%, cachés vaciadas y
+FLauncher como pantalla de inicio, sobreviviendo a dos reinicios. La tele
+funciona: Fuentes, HDMI, Netflix, YouTube, sonido, teclado y mando, todo
+comprobado con el mando después de cada tanda.
+
+| Medida | Antes | Después |
+|---|---|---|
+| Paquetes de sistema | 177 | 177 |
+| Paquetes activos | 167 | 155 |
+| Paquetes desactivados | 16 | 28 |
+| Instalados por el usuario | 6 | 7 (FLauncher) |
+| Pantalla de inicio | `com.google.android.tvlauncher` | `me.efesser.flauncher` |
+
+**La tabla de RAM no se entregó.** `99-report.sh` no consigue leer los valores
+de `dumpsys meminfo` de esta tele ni después de arreglar la incompatibilidad
+de `grep` con macOS. Los ficheros `meminfo.txt` del antes y el después están
+guardados en `measurements/`, así que el dato existe y es recuperable, pero el
+parser sigue fallando por una causa no identificada. Queda como fallo abierto;
+no se sustituyó por una estimación.
+
+Valoración honesta del resultado, en palabras del usuario: «la tele funciona
+OK, nada prodigioso». Correcto y esperable. Desactivar paquetes no cambia el
+hardware. La ganancia real y perceptible fue quitar la pantalla de inicio con
+anuncios y filas de recomendaciones, más los menús al 50% de animación.
+
+La sesión de Claude que preparó el toolkit corría en un contenedor en la nube,
+sin ruta de red hacia 192.168.178.86, así que todos los comandos los ejecutó
+el usuario en su Mac. Las salvaguardas van dentro de los scripts, no en la
+vigilancia de quien mira.
 
 ---
 
@@ -112,6 +137,19 @@ paquete y la tanda a la que pertenece.
 | `com.apple.atve.androidtv.appletv` | App de Apple TV |
 | `com.google.android.play.games` | Juegos de Google |
 
+### Lanzador — `07-force-launcher.sh`
+
+| Paquete | Qué era |
+|---|---|
+| `com.google.android.tvlauncher` | La pantalla de inicio de Google: los anuncios y las filas de «recomendado para ti» |
+
+`set-home-activity` no funciona en esta build: responde `Success` sin registrar
+preferencia (los tres candidatos seguían con `preferredOrder=0`) y el lanzador
+de Google gana por `priority=2`. Hubo que invertir el orden del plan, con el
+consentimiento explícito del usuario, y apoyarse en tres garantías distintas:
+FLauncher verificado como HOME registrado, `FallbackHome` de Android como
+suelo, y marcha atrás automática si FLauncher no tomaba el relevo.
+
 ### Lo que el usuario decidió CONSERVAR
 
 Netflix, Prime Video, Atresplayer, RTVE, IPTV Smarters, Downloader, FitOn,
@@ -123,7 +161,17 @@ firmware.
 
 ## Deshacerlo todo
 
-Un solo comando:
+Un solo comando, sin depender de esta carpeta (está también en
+[`UNDO-TODO.txt`](UNDO-TODO.txt)):
+
+```bash
+adb connect 192.168.178.86:5555 && adb -s 192.168.178.86:5555 shell 'for p in com.google.android.backdrop com.android.dreams.basic com.google.android.tungsten.setupwraith com.google.android.onetimeinitializer com.google.android.partnersetup com.google.android.feedback com.google.android.syncadapters.calendar com.android.printspooler com.android.wallpaperbackup com.apple.atve.androidtv.appletv com.google.android.play.games com.google.android.tvlauncher; do pm enable $p; done; settings put global window_animation_scale 1.0; settings put global transition_animation_scale 1.0; settings put global animator_duration_scale 1.0' && adb -s 192.168.178.86:5555 reboot
+```
+
+Verificado con un `adb` simulado: reactiva los 12 paquetes, restaura las tres
+animaciones y reinicia.
+
+Desde la carpeta del proyecto, lo mismo:
 
 ```bash
 ./05-undo-all.sh
